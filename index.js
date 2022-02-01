@@ -15,7 +15,7 @@ app.use(express.json());
 app.use(cors({ origin: "*" }));
 
 //Rutas o vistas
-// app.use('/user', require('./routes/User.Route'));
+app.use('/user', require('./src/routes/User.route'));
 // app.use('/note', require('./routes/Note.Route'));
 
 app.listen(app.get('port'), () => {
