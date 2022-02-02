@@ -61,13 +61,13 @@ userController.deleteUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         ok: false,
-        message: "the note does not exist",
+        message: "the user does not exist",
       });
     }
     await user.deleteOne();
     res.json({
       ok: true,
-      message: "Deleted Note",
+      message: "Deleted user",
     });
   } catch (error) {
     res.status(500).json({
@@ -86,7 +86,7 @@ userController.updateUser = async (req, res) => {
     if (!user) {
       return res.status(404).json({
         ok: false,
-        message: "the note does not exist",
+        message: "the user does not exist",
       });
     }
     const nombre = req.body.nombre || user.nombre;
@@ -99,7 +99,7 @@ userController.updateUser = async (req, res) => {
     await user.updateOne(newUser);
     res.json({
       ok: true,
-      message: "update Note",
+      message: "update user",
       newUser,
     });
   } catch (error) {

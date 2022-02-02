@@ -16,7 +16,9 @@ app.use(cors({ origin: "*" }));
 
 //Rutas o vistas
 app.use('/user', require('./src/routes/User.route'));
-// app.use('/note', require('./routes/Note.Route'));
+app.use('/client', require('./src/routes/Client.route'));
+app.use('/product', require('./src/routes/Product.route'));
+app.use('/shopping', require('./src/routes/Shopping.route'));
 
 app.listen(app.get('port'), () => {
     console.log('Servidor corriendo en el puertooo', app.get('port'));
