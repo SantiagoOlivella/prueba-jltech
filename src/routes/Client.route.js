@@ -1,10 +1,11 @@
 const { Router } = require("express");
 const clientController = require("../controllers/Client.controller");
 const route = Router();
+const verificarToken = require("../middlewares/Verifyjwt.Users");
 
-route.get("/", clientController.listClient);
-route.post("/add", clientController.addClient);
-route.delete("/delete/:id", clientController.deleteClient);
-route.put("/update/:id", clientController.updateClient);
+route.get("/", verificarToken, clientController.listClient);
+route.post("/add", verificarToken, clientController.addClient);
+route.delete("/delete/:id", verificarToken, clientController.deleteClient);
+route.put("/update/:id", verificarToken, clientController.updateClient);
 
 module.exports = route;
