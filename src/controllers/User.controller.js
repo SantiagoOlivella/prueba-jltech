@@ -4,9 +4,10 @@ const auth = require("../helpers/Auth.helpers");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { deleteImg } = require("../helpers/DeleteImg");
+const { validarRol } = require("../helpers/ValidationEmail");
+const validationRol = require("../helpers/ValidationRol");
 
 // read
-
 userController.listUser = async (req, res) => {
   try {
     const user = await userModel.find({}, { contraseña: 0 });
@@ -127,16 +128,18 @@ userController.updateUser = async (req, res) => {
 
     const nombre = req.body.nombre || user.nombre;
     const contacto = req.body.contacto || user.contacto;
-    const imagen = user.setimgUrl;
     const correo = req.body.correo || user.correo;
     const contraseña = req.body.contraseña || user.contraseña;
     const rol = req.body.rol || user.rol;
-    const newUser = { nombre, contacto, imagen, correo, contraseña, rol };
+    const newUser = { nombre, contacto, correo, contraseña, rol };
     await user.updateOne(newUser);
     res.json({
       ok: true,
       message: "update user",
-      newUser,
+      nombre: newUser.nombre,
+      contacto: newUser.contacto,
+      correo: newUser.correo,
+      rol: newUser.rol,
     });
   } catch (error) {
     res.status(500).json({
@@ -145,6 +148,8 @@ userController.updateUser = async (req, res) => {
     });
   }
 };
+
+//Login
 
 userController.login = async (req, res) => {
   try {
@@ -156,6 +161,8 @@ userController.login = async (req, res) => {
         message: "email/password incorrectos",
       });
     }
+    validarRol(user.correo)
+    validationRol()
     const respuesta = bcrypt.compareSync(contraseña, user.contraseña);
     if (respuesta) {
       return res.json({

@@ -1,5 +1,6 @@
 const productController = {};
 const productModel = require("../models/Product.model");
+const { deleteImg } = require("../helpers/DeleteImg");
 
 // read
 
@@ -22,7 +23,7 @@ productController.listProduct = async (req, res) => {
 
 productController.addProduct = async (req, res) => {
   try {
-    const { imagen, nombre, valor, stock, categoria } = req.body;
+    const { nombre, valor, stock, categoria } = req.body;
     const validationProduct = await productModel.findOne({ nombre: nombre });
     if (validationProduct) {
       return res.status(400).json({
@@ -31,12 +32,17 @@ productController.addProduct = async (req, res) => {
       });
     }
     const newProduct = new productModel({
-      imagen,
       nombre,
       valor,
       stock,
       categoria,
     });
+
+    if (req.file) {
+      const { filename } = req.file;
+      newProduct.setimgUrl(filename);
+    }
+
     await newProduct.save();
     res.status(201).json({
       ok: true,
@@ -62,6 +68,9 @@ productController.deleteProduct = async (req, res) => {
         ok: false,
         message: "the product does not exist",
       });
+    }
+    if (product.nameImg) {
+      deleteImg(product.nameImg);
     }
     await product.deleteOne();
     res.json({
@@ -89,12 +98,20 @@ productController.updateProduct = async (req, res) => {
       });
     }
 
-    const imagen = req.body.imagen || product.imagen;
+    if (req.file) {
+      if (product.nameImg) {
+        deleteImg(product.nameImg);
+      }
+      const { filename } = req.file;
+      product.setimgUrl(filename);
+      await product.save();
+    }
+
     const nombre = req.body.nombre || product.nombre;
     const valor = req.body.valor || product.valor;
     const stock = req.body.stock || product.stock;
     const categoria = req.body.categoria || product.categoria;
-    const newProduct = { imagen, nombre, valor, stock, categoria };
+    const newProduct = { nombre, valor, stock, categoria };
     await product.updateOne(newProduct);
     res.json({
       ok: true,

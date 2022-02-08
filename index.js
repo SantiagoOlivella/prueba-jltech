@@ -7,8 +7,7 @@ const path = require("path");
 const app = express();
 
 app.set("port", 4000);
-app.use('/public', express.static(__dirname + "/storage/imgs"));
-// app.use(express.static(path.join(__dirname, "/storage/imgs")));
+app.use('/public', express.static(__dirname + "/src/storage/imgs"));
 
 app.use(morgan("dev"));
 
